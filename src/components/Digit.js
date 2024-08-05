@@ -1,5 +1,5 @@
 import React from "react";
 
 export const Digit = ({ num, numId }) => {
-  return <button id={numId}>{num}</button>;
+  return <button className="digit" id={numId}>{num}</button>;
 };

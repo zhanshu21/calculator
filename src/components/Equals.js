@@ -2,6 +2,6 @@ import React from "react";
 
 export const Equals = () => {
     return (
-        <button id="equals">=</button>
+        <button className="equals" id="equals">=</button>
     )
 }
