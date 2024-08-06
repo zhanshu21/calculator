@@ -16,7 +16,6 @@ body {
   display: grid;
   grid-template-columns: repeat(3, 5rem) 6rem ;
   grid-template-rows: repeat(6, 4rem);
-  /* border: ridge 3px #000; */
 }
 
 .calculator > button {
@@ -36,7 +35,7 @@ body {
   color: #f0f0f0;
   padding: 1px 5px;
   display: grid;
-  grid-template-rows: repeat(2, 1fr);
+  grid-template-rows: 4fr 5fr;
 }
 
 .input, .output {
