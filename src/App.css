@@ -20,20 +20,39 @@ body {
 }
 
 .calculator > button {
-  background-color: #edededbc;
+  background-color: #f2f3db9a;
   border: #a9a8a8 1px solid;
   outline: none;
+  font-size: 1.2rem
+}
+
+.calculator > button:hover {
+  background-color: #fcf9ded7;
+}
+
+.display-container {
+  grid-column: 1 / -1;
+  background-color: rgba(105, 105, 105, 0.801);
+  color: #f0f0f0;
+  padding: 1px 5px;
+  display: grid;
+  grid-template-rows: repeat(2, 1fr);
+}
+
+.input, .output {
+  display: flex;
+  justify-content: flex-end;
+  font-weight: 600;
   font-size: 1.2rem;
 }
 
-.display {
-  grid-column: 1 / -1;
-  background-color: rgba(63, 62, 62, 0.801);
-  display: flex;
-  justify-content: flex-end;
-  color: #f0f0f0;
-  padding: 1px 5px;
+.output {
+  font-size: 1.5rem;
+  color: rgb(244, 184, 71);
+  font-weight: 400;
 }
+
+
 
 .clear, .digit#zero {
   grid-column: 1 / 3;

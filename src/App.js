@@ -1,59 +1,101 @@
 import "./App.css";
-import React from "react";
+import React, { useReducer } from "react";
 import { Equals } from "./components/Equals";
 import { Digit } from "./components/Digit";
 import { Operator } from "./components/Operator";
 import { Decimal } from "./components/Decimal";
 import { Clear } from "./components/Clear";
 
-// const numberWords = [
-//   "zero",
-//   "one",
-//   "two",
-//   "three",
-//   "four",
-//   "five",
-//   "six",
-//   "seven",
-//   "eight",
-//   "nine",
-// ];
+export const ACTIONS = {
+  ADD_DIGIT: "add-digit",
+  ADD_DECIMAL: "add-decimal",
+  ADD_OPERATION: "add-operation",
+  CLEAR: "clear",
+  EVALUATE: "evaluate",
+};
 
-// const operators = {
-//   add: "+",
-//   subtract: "-",
-//   multiply: "*",
-//   divide: "/",
-// };
+const initialState = { input: "", output: "", operation: "" };
+
+function reducer(state, { type, payload }) {
+  switch (type) {
+    case ACTIONS.ADD_DIGIT:
+      if (state.output === "0") {
+        return {
+          ...state,
+          input: `${payload.num}`,
+          output: `${payload.num}`,
+        };
+      }
+      return {
+        ...state,
+        input: `${state.input || ""}${payload.num}`,
+        output: `${state.output || ""}${payload.num}`,
+      };
+    case ACTIONS.CLEAR:
+      return {
+        ...initialState,
+        output: "0",
+      };
+    case ACTIONS.ADD_DECIMAL:
+      if (state.output === '' || state.input === '') {
+        return {
+          ...state,
+          input: `0${payload.decimal}`,
+          output: `0${payload.decimal}`,
+        };
+      }
+      if (state.output.includes(".")) {
+        return state;
+      }
+      return {
+        ...state,
+        input: `${state.input || ""}${payload.decimal}`,
+        output: `${state.output || ""}${payload.decimal}`,
+      };
+    case ACTIONS.ADD_OPERATION:
+      return {
+        ...state,
+        operation: payload.symbol,
+        output: ''
+      };
+    default:
+      return state;
+  }
+}
 
 function App() {
+  const [{ input, output, operation }, dispatch] = useReducer(
+    reducer,
+    initialState
+  );
   return (
     <div className="calculator">
-      <div className="display" id="display">display</div>
-      <Clear />
-      <Operator op="divide" symbol="/" />
-      <Operator op="multiply" symbol="*" />
-      <Digit num="7" numId="seven"/>
-      <Digit num="8" numId="eight"/>
-      <Digit num="9" numId="nine"/>
-      <Operator op="subtract" symbol="-" />
-      <Digit num="4" numId="four"/>      
-      <Digit num="5" numId="five"/>
-      <Digit num="6" numId="six"/>
-      <Operator op="add" symbol="+" /> 
-      <Digit num="1" numId="one"/>
-      <Digit num="2" numId="two"/>
-      <Digit num="3" numId="three"/>
+      <div id="display-container" className="display-container">
+        <div className="input" id="input-display">
+          {input} {operation}
+        </div>
+        <div className="output" id="display">
+          {output}
+        </div>
+      </div>
+      <Clear dispatch={dispatch} />
+      <Operator op="divide" symbol="/" dispatch={dispatch} />
+      <Operator op="multiply" symbol="*" dispatch={dispatch} />
+      <Digit num="7" numId="seven" dispatch={dispatch} />
+      <Digit num="8" numId="eight" dispatch={dispatch} />
+      <Digit num="9" numId="nine" dispatch={dispatch} />
+      <Operator op="subtract" symbol="-" dispatch={dispatch} />
+      <Digit num="4" numId="four" dispatch={dispatch} />
+      <Digit num="5" numId="five" dispatch={dispatch} />
+      <Digit num="6" numId="six" dispatch={dispatch} />
+      <Operator op="add" symbol="+" dispatch={dispatch} />
+      <Digit num="1" numId="one" dispatch={dispatch} />
+      <Digit num="2" numId="two" dispatch={dispatch} />
+      <Digit num="3" numId="three" dispatch={dispatch} />
       {/* <Equals /> */}
-      <Digit num="0" numId="zero"/>
-      <Decimal />
-      <Equals />
-      {/* {numberWords.map((numId, num) => (
-        <Digit key={numId} num={num} numId={numId} />
-      ))}
-      {Object.entries(operators).map(([k, v]) => (
-        <Operator key={k} op={k} symbol={v} />
-      ))} */}  
+      <Digit num="0" numId="zero" dispatch={dispatch} />
+      <Decimal dispatch={dispatch} />
+      <Equals dispatch={dispatch} />
     </div>
   );
 }
