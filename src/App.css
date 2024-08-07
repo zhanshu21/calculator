@@ -15,7 +15,7 @@ body {
 .calculator {
   display: grid;
   grid-template-columns: repeat(3, 5rem) 6rem ;
-  grid-template-rows: repeat(6, 4rem);
+  grid-template-rows: minmax(5rem, auto) repeat(5, 4rem);
 }
 
 .calculator > button {
@@ -31,7 +31,7 @@ body {
 
 .display-container {
   grid-column: 1 / -1;
-  background-color: rgba(105, 105, 105, 0.801);
+  background-color: rgba(125, 124, 124, 0.6);
   color: #f0f0f0;
   padding: 1px 5px;
   display: grid;
@@ -43,15 +43,16 @@ body {
   justify-content: flex-end;
   font-weight: 600;
   font-size: 1.2rem;
+  /* white-space: pre-wrap; Allows text to wrap */
+  word-wrap: break-word; /* Breaks words if they are too long to fit on one line */
+  word-break: break-all;
 }
 
 .output {
-  font-size: 1.5rem;
+  font-size: 2rem;
   color: rgb(244, 184, 71);
   font-weight: 400;
 }
-
-
 
 .clear, .digit#zero {
   grid-column: 1 / 3;
