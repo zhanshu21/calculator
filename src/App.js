@@ -14,11 +14,14 @@ export const ACTIONS = {
   EVALUATE: "evaluate",
 };
 
-const initialState = { input: "", output: "", operation: "" };
+const initialState = { input: "", output: "", operation: "", isResult: false};
 
 function reducer(state, { type, payload }) {
   switch (type) {
     case ACTIONS.ADD_DIGIT:
+      if (state.isResult === true) {
+        return initialState;
+      }
       if (state.output === "0") {
         return {
           ...state,
@@ -33,8 +36,15 @@ function reducer(state, { type, payload }) {
       return {
         ...initialState,
         output: "0",
+        isResult: false
       };
     case ACTIONS.ADD_DECIMAL:
+      if (state.isResult === true) {
+        return {
+          ...initialState,
+          isResult: false
+        }
+      }
       if (state.output === "") {
         return {
           ...state,
@@ -49,12 +59,10 @@ function reducer(state, { type, payload }) {
         output: `${state.output || ""}${payload.decimal}`,
       };
     case ACTIONS.ADD_OPERATION:
-      if (state.output === "") {
-        return {
-          ...state,
-          operation: payload.symbol,
-        };
+      if (state.output === "Error") {
+        return initialState
       }
+
       // handle negative operator
       if (
         payload.symbol === "-" &&
@@ -64,6 +72,7 @@ function reducer(state, { type, payload }) {
         return {
           ...state,
           output: `${payload.symbol}`,
+          isResult: false
         };
       }
       if (state.input === "" && state.output === "") {
@@ -75,18 +84,18 @@ function reducer(state, { type, payload }) {
       if (state.input === "" && state.output === "-") {
         return initialState;
       }
-      if (state.output === "" && state.operation !== "") {
+      if (state.output === "") {
         return {
           ...state,
-          opration: payload.symbol,
+          isResult: false,
+          operation: payload.symbol,
         };
       }
       if (state.input === "") {
         return {
-          ...state,
+          ...initialState,
           input: state.output,
-          operation: payload.symbol,
-          output: "",
+          operation: payload.symbol
         };
       }
       return {
@@ -94,11 +103,13 @@ function reducer(state, { type, payload }) {
         operation: payload.symbol,
         input: calc(state),
         output: "",
+        isResult: false
       };
     case ACTIONS.EVALUATE:
       return {
         ...initialState,
-        output: calc(state)
+        output: calc(state),
+        isResult: true
       };
     default:
       return state;
@@ -117,9 +128,12 @@ function calc({ input, output, operation }) {
     case "*":
       return (inputFloat * outputFloat).toString();
     case "/":
+      if (outputFloat === 0) {
+        return "Error"
+      }
       return (inputFloat / outputFloat).toString();
     default:
-      return "";
+      return "Error";
   }
 }
 
