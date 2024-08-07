@@ -35,7 +35,7 @@ function reducer(state, { type, payload }) {
         output: "0",
       };
     case ACTIONS.ADD_DECIMAL:
-      if (state.output === '') {
+      if (state.output === "") {
         return {
           ...state,
           output: `0${payload.decimal}`,
@@ -49,69 +49,78 @@ function reducer(state, { type, payload }) {
         output: `${state.output || ""}${payload.decimal}`,
       };
     case ACTIONS.ADD_OPERATION:
-      // handle negative operator
-      if (payload.symbol === '-' && (state.output === '' || state.output === '0') && !state.operation) {
+      if (state.output === "") {
         return {
           ...state,
-          output: `${payload.symbol}`
+          operation: payload.symbol,
         };
       }
-      if (state.input === '' && state.output === '') {
+      // handle negative operator
+      if (
+        payload.symbol === "-" &&
+        (state.output === "" || state.output === "0") &&
+        !state.operation
+      ) {
+        return {
+          ...state,
+          output: `${payload.symbol}`,
+        };
+      }
+      if (state.input === "" && state.output === "") {
         return state;
       }
-      // if (state.output === '' && state.operation && payload.symbol === '-') {
-      //   return {
-      //     ...state,
-      //     output: `${payload.symbol}`
-      //   };
-      // }
-      // if (state.output === '-') {
-      //   return {
-      //     ...state,
-      //     opration: payload.symbol,
-      //     output: ''
-      //   }
-      // }
-      if (state.output === '' ) {
+      if (state.input === "" && state.output === "0") {
+        return initialState;
+      }
+      if (state.input === "" && state.output === "-") {
+        return initialState;
+      }
+      if (state.output === "" && state.operation !== "") {
         return {
           ...state,
-          opration: payload.symbol
+          opration: payload.symbol,
         };
       }
-      if (state.input === '') {
+      if (state.input === "") {
         return {
           ...state,
           input: state.output,
           operation: payload.symbol,
-          output: ''
-        }
+          output: "",
+        };
       }
       return {
         ...state,
         operation: payload.symbol,
         input: calc(state),
-        output: ''
+        output: "",
       };
     case ACTIONS.EVALUATE:
       return {
         ...initialState,
         output: calc(state)
-      }
+      };
     default:
       return state;
   }
 }
 
 function calc({ input, output, operation }) {
-    let inputFloat = parseFloat(input);
-    let outputFloat = parseFloat(output);
-    switch (operation) {
-      case "+" : return (inputFloat + outputFloat).toString();
-      case "-" : return (inputFloat - outputFloat).toString();
-      case "*" : return (inputFloat * outputFloat).toString();
-      case "/" : return (inputFloat / outputFloat).toString();
-      default: return '';
-    }
+  let inputFloat = parseFloat(input);
+  let outputFloat = parseFloat(output);
+  if (isNaN(inputFloat) || isNaN(outputFloat)) return "";
+  switch (operation) {
+    case "+":
+      return (inputFloat + outputFloat).toString();
+    case "-":
+      return (inputFloat - outputFloat).toString();
+    case "*":
+      return (inputFloat * outputFloat).toString();
+    case "/":
+      return (inputFloat / outputFloat).toString();
+    default:
+      return "";
+  }
 }
 
 function App() {
